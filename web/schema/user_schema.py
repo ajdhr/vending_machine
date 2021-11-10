@@ -16,7 +16,7 @@ class UserSchema(Schema):
         return dacite.from_dict(data_class=UserDTO, data=data)
 
 
-class GetUserSchema(Schema):
+class UserResponseSchema(Schema):
     username = fields.String(required=True, allow_none=False)
     role = EnumField(Role, required=True, allow_none=False)
     deposit = fields.Integer(required=True, allow_none=False)

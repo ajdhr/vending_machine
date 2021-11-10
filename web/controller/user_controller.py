@@ -1,8 +1,9 @@
 from flask import request, Response
+from flask_login import login_required
 from flask_restplus import Namespace, Resource
 
-from web.dto.user_dto import UserDTO, GetUserDTO
-from web.schema.user_schema import UserSchema, GetUserSchema
+from web.dto.user_dto import UserDTO, UserResponseDTO
+from web.schema.user_schema import UserSchema, UserResponseSchema
 from web.service.user_service import UserService
 
 api = Namespace("user", description="User namespace")
@@ -19,19 +20,22 @@ class CreateUserController(Resource):
 
 @api.route("/")
 class UserController(Resource):
+    @login_required
     def get(self):
-        user_data: GetUserDTO = UserService.get()
+        user_data: UserResponseDTO = UserService.get()
 
-        response_data = GetUserSchema().dump(user_data)
+        response_data = UserResponseSchema().dump(user_data)
 
         return response_data, 200
 
+    @login_required
     def put(self):
         user_data: UserDTO = UserSchema().load(request.json)
         UserService.update(data=user_data)
 
         return Response(status=201)
 
+    @login_required
     def delete(self):
         UserService.delete()
 

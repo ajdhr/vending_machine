@@ -8,5 +8,5 @@ class Role(Enum):
     seller = "seller"
 
 
-buyer_permission = Permission(RoleNeed(Role.buyer))
-seller_permission = Permission(RoleNeed(Role.seller))
+buyer_permission = Permission(RoleNeed(Role.buyer.value))
+seller_permission = Permission(RoleNeed(Role.seller.value))

@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash
 
 from db_factory import db
 from role import Role
-from web.dto.user_dto import UserDTO, GetUserDTO
+from web.dto.user_dto import UserDTO, UserResponseDTO
 from web.model.user import User
 
 
@@ -17,7 +17,7 @@ class UserService:
         db.session.commit()
 
     @classmethod
-    def get(cls) -> GetUserDTO:
+    def get(cls) -> UserResponseDTO:
         user = cls.__get_by_id(user_id=current_user.id)
 
         return cls.__populate_user_dto(user=user)
@@ -34,8 +34,8 @@ class UserService:
         User.query.filter(User.id == current_user.id).delete()
 
     @classmethod
-    def __populate_user_dto(cls, user: User) -> GetUserDTO:
-        return GetUserDTO(username=user.username, role=Role(user.role), deposit=user.deposit)
+    def __populate_user_dto(cls, user: User) -> UserResponseDTO:
+        return UserResponseDTO(username=user.username, role=Role(user.role), deposit=user.deposit)
 
     @classmethod
     def __get_by_id(cls, user_id: int) -> User:

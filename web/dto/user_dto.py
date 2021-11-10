@@ -11,7 +11,7 @@ class UserDTO:
 
 
 @dataclass
-class GetUserDTO:
+class UserResponseDTO:
     username: str
     role: Role
     deposit: int
