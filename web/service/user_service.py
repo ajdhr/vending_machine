@@ -5,6 +5,7 @@ from db_factory import db
 from role import Role
 from web.dto.user_dto import UserDTO, UserResponseDTO
 from web.model.user import User
+from web.repository.user_repository import UserRepository
 
 
 class UserService:
@@ -18,13 +19,13 @@ class UserService:
 
     @classmethod
     def get(cls) -> UserResponseDTO:
-        user = cls.__get_by_id(user_id=current_user.id)
+        user = UserRepository.get_current_user()
 
         return cls.__populate_user_dto(user=user)
 
     @classmethod
     def update(cls, data: UserDTO):
-        user = cls.__get_by_id(user_id=current_user.id)
+        user = UserRepository.get_current_user()
         cls.__populate_user_model(user=user, data=data)
 
         db.session.commit()
@@ -36,10 +37,6 @@ class UserService:
     @classmethod
     def __populate_user_dto(cls, user: User) -> UserResponseDTO:
         return UserResponseDTO(username=user.username, role=Role(user.role), deposit=user.deposit)
-
-    @classmethod
-    def __get_by_id(cls, user_id: int) -> User:
-        return User.query.filter(User.id == current_user.id).first()
 
     @classmethod
     def __populate_user_model(cls, user: User, data: UserDTO):
