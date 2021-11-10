@@ -4,7 +4,14 @@ from role import Role
 
 
 @dataclass
-class CreateUserDTO:
+class UserDTO:
     username: str
     password: str
     role: Role
+
+
+@dataclass
+class GetUserDTO:
+    username: str
+    role: Role
+    deposit: int
