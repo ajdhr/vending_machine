@@ -13,6 +13,8 @@ api = Namespace("user", description="User namespace")
 @api.route("/")
 class CreateUserController(Resource):
     @validation_error_handler
+    @api.response(201, "User successfully created")
+    @api.response(400, "Invalid request data")
     def post(self):
         user_data: UserDTO = UserSchema().load(request.json)
         UserService.create(data=user_data)
@@ -23,6 +25,8 @@ class CreateUserController(Resource):
 @api.route("/")
 class UserController(Resource):
     @login_required
+    @api.response(200, "User successfully retrieved")
+    @api.response(401, "Unauthorized access")
     def get(self):
         user_data: UserResponseDTO = UserService.get()
 
@@ -32,6 +36,9 @@ class UserController(Resource):
 
     @login_required
     @validation_error_handler
+    @api.response(200, "User successfully updated")
+    @api.response(400, "Invalid request data")
+    @api.response(401, "Unauthorized access")
     def put(self):
         user_data: UserDTO = UserSchema().load(request.json)
         UserService.update(data=user_data)
@@ -39,6 +46,8 @@ class UserController(Resource):
         return Response(status=201)
 
     @login_required
+    @api.response(204, "User successfully deleted")
+    @api.response(401, "Unauthorized access")
     def delete(self):
         UserService.delete()
 

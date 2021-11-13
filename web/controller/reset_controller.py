@@ -12,6 +12,9 @@ api = Namespace("reset", description="Reset namespace")
 class ResetController(Resource):
     @login_required
     @buyer_permission.require(http_exception=403)
+    @api.response(200, "Deposit successfully reset")
+    @api.response(401, "Unauthorized access")
+    @api.response(403, "Forbidden access")
     def post(self):
         TransactionService.reset()
 

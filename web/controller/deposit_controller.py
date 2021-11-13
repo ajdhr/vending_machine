@@ -16,8 +16,12 @@ class DepositController(Resource):
     @login_required
     @buyer_permission.require(http_exception=403)
     @validation_error_handler
+    @api.response(200, "Deposit successfully applied")
+    @api.response(400, "Invalid request data")
+    @api.response(401, "Unauthorized access")
+    @api.response(403, "Forbidden access")
     def post(self):
         deposit_data: DepositDTO = DepositSchema().load(request.json)
         TransactionService.deposit(data=deposit_data)
 
-        return Response(status=201)
+        return Response(status=200)

@@ -1,4 +1,4 @@
-from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
+from werkzeug.exceptions import BadRequest, NotFound, Unauthorized, Forbidden
 
 
 class InvalidUserCredentials(Unauthorized):
@@ -16,7 +16,7 @@ class ProductNotFoundException(NotFound):
         super().__init__(f"Product with ID({product_id}) does not exist")
 
 
-class ProductNotOwnedByUser(BadRequest):
+class ProductNotOwnedByUser(Forbidden):
     def __init__(self, product_id: int):
         super().__init__(f"Current user does not own the product with ID({product_id})")
 

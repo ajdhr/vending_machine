@@ -10,6 +10,8 @@ api = Namespace("auth", description="Auth namespace")
 
 @api.route("/login/")
 class LoginController(Resource):
+    @api.response(200, "Logged in successfully")
+    @api.response(400, "Invalid request data")
     def post(self):
         login_data: AuthDTO = AuthSchema().load(request.json)
         AuthService.login(data=login_data)
@@ -19,6 +21,7 @@ class LoginController(Resource):
 
 @api.route("/logout/")
 class LogoutController(Resource):
+    @api.response(200, "Logged out successfully")
     def post(self):
         AuthService.logout()
 

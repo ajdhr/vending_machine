@@ -16,6 +16,11 @@ class BuyController(Resource):
     @login_required
     @buyer_permission.require(http_exception=403)
     @validation_error_handler
+    @api.response(200, "Product successfully bought")
+    @api.response(400, "Invalid request data")
+    @api.response(401, "Unauthorized access")
+    @api.response(403, "Forbidden access")
+    @api.response(404, "Requested resource not found")
     def post(self):
         transaction_data: TransactionDTO = TransactionSchema().load(request.json)
         transaction_response: TransactionResultDTO = TransactionService.buy_product(data=transaction_data)
