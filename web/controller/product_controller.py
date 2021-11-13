@@ -8,6 +8,7 @@ from role import seller_permission
 from web.dto.product_dto import ProductDTO, ProductResponseDTO
 from web.schema.product_schema import ProductSchema, ProductResponseSchema
 from web.service.product_service import ProductService
+from web.utils.validation_error_handler import validation_error_handler
 
 api = Namespace("product", description="Product namespace")
 
@@ -16,11 +17,13 @@ api = Namespace("product", description="Product namespace")
 class ProductListController(Resource):
     @login_required
     @seller_permission.require(http_exception=403)
+    @validation_error_handler
     def post(self):
         product_data: ProductDTO = ProductSchema().load(request.json)
-        ProductService.create(data=product_data)
+        product_response_data: ProductResponseDTO = ProductService.create(data=product_data)
 
-        return Response(status=201)
+        response = ProductResponseSchema().dump(product_response_data)
+        return response, 201
 
     @login_required
     def get(self):
@@ -41,12 +44,14 @@ class ProductController(Resource):
 
     @login_required
     @seller_permission.require(http_exception=403)
+    @validation_error_handler
     def put(self, id):
         product_data: ProductDTO = ProductSchema().load(request.json)
 
-        ProductService.update(product_id=id, data=product_data)
+        product_response_data: ProductResponseDTO = ProductService.update(product_id=id, data=product_data)
 
-        return Response(status=201)
+        response = ProductResponseSchema().dump(product_response_data)
+        return response, 201
 
     @login_required
     @seller_permission.require(http_exception=403)

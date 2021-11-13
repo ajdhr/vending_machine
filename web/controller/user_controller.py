@@ -23,7 +23,6 @@ class CreateUserController(Resource):
 @api.route("/")
 class UserController(Resource):
     @login_required
-    @validation_error_handler
     def get(self):
         user_data: UserResponseDTO = UserService.get()
 
@@ -32,6 +31,7 @@ class UserController(Resource):
         return response_data, 200
 
     @login_required
+    @validation_error_handler
     def put(self):
         user_data: UserDTO = UserSchema().load(request.json)
         UserService.update(data=user_data)

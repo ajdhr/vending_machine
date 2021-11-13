@@ -6,14 +6,16 @@ from role import buyer_permission
 from web.dto.transaction_dto import TransactionDTO, TransactionResultDTO
 from web.schema.transaction_schema import TransactionSchema, TransactionResponseSchema
 from web.service.transaction_service import TransactionService
+from web.utils.validation_error_handler import validation_error_handler
 
 api = Namespace("buy", description="Buy namespace")
 
 
 @api.route("/")
-class DepositController(Resource):
+class BuyController(Resource):
     @login_required
     @buyer_permission.require(http_exception=403)
+    @validation_error_handler
     def post(self):
         transaction_data: TransactionDTO = TransactionSchema().load(request.json)
         transaction_response: TransactionResultDTO = TransactionService.buy_product(data=transaction_data)

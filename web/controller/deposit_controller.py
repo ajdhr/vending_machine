@@ -6,6 +6,7 @@ from role import buyer_permission
 from web.dto.deposit_dto import DepositDTO
 from web.schema.deposit_schema import DepositSchema
 from web.service.transaction_service import TransactionService
+from web.utils.validation_error_handler import validation_error_handler
 
 api = Namespace("deposit", description="Deposit namespace")
 
@@ -14,6 +15,7 @@ api = Namespace("deposit", description="Deposit namespace")
 class DepositController(Resource):
     @login_required
     @buyer_permission.require(http_exception=403)
+    @validation_error_handler
     def post(self):
         deposit_data: DepositDTO = DepositSchema().load(request.json)
         TransactionService.deposit(data=deposit_data)

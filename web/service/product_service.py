@@ -11,12 +11,14 @@ from web.utils.exceptions import ProductNotOwnedByUser
 
 class ProductService:
     @classmethod
-    def create(cls, data: ProductDTO):
+    def create(cls, data: ProductDTO) -> ProductResponseDTO:
         product = Product(seller_id=current_user.id)
         cls.__populate_product_model(product=product, data=data)
 
         db.session.add(product)
         db.session.commit()
+
+        return cls.__populate_product_response_dto(product=product)
 
     @classmethod
     def get(cls, product_id: int) -> ProductResponseDTO:
@@ -29,13 +31,15 @@ class ProductService:
         return [cls.__populate_product_response_dto(product) for product in products]
 
     @classmethod
-    def update(cls, product_id: int, data: ProductDTO):
+    def update(cls, product_id: int, data: ProductDTO) -> ProductResponseDTO:
         product = ProductRepository.get_by_id(product_id=product_id)
         cls.__validate_ownership(product=product)
 
         cls.__populate_product_model(product=product, data=data)
 
         db.session.commit()
+
+        return cls.__populate_product_response_dto(product=product)
 
     @classmethod
     def delete(cls, product_id: int):

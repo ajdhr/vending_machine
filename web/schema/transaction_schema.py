@@ -1,12 +1,13 @@
 import dacite
 from marshmallow import Schema, fields, post_load
+from marshmallow.validate import Range
 
 from web.dto.transaction_dto import TransactionDTO
 
 
 class TransactionSchema(Schema):
     product_id = fields.Integer(required=True, allow_none=False)
-    amount = fields.Integer(required=True, allow_none=False)
+    amount = fields.Integer(required=True, allow_none=False, validate=Range(min=0))
 
     @post_load
     def load_to_dto(self, data, *args, **kwargs):
