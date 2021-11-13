@@ -8,4 +8,4 @@ class Product(db.Model):
     name = db.Column(db.String(100))
     cost = db.Column(db.Integer)
     amount_available = db.Column(db.Integer)
-    seller_id = db.Column(db.Integer, ForeignKey('user.id'))
+    seller_id = db.Column(db.Integer, ForeignKey("user.id"))

@@ -11,4 +11,3 @@ class ProductDTO:
 @dataclass
 class ProductResponseDTO(ProductDTO):
     id: int
-

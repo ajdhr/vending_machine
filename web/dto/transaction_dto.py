@@ -13,4 +13,3 @@ class TransactionResultDTO:
     product_id: int
     amount: int
     change: List[int]
-
