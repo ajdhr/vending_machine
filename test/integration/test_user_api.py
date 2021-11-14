@@ -15,16 +15,13 @@ from web.service.user_service import UserService
 class TestUserApi(BaseApiTestCase):
     @target_mock.patch(target_module=UserRepository, target=CurrentUserRepository, new=MockCurrentUserBuyerRepository)
     def test__create_user(self):
-        self.http_client.post(
-            "/api/user/",
-            headers=self._HEADERS,
-            data=json.dumps(MockUserData.get_valid_create_user_request_data()),
-        )
+        user_data = MockUserData.get_valid_create_user_request_data()
+        self.http_client.post("/api/user/", headers=self._HEADERS, data=json.dumps(user_data))
 
         users = db.session.query(User).all()
 
         self.assertEqual(len(users), 1)
-        self.assertEqual(users[0].username, MockUserData.get_valid_create_user_request_data().get("username"))
+        self.assertEqual(users[0].username, user_data.get("username"))
 
     @target_mock.patch(target_module=UserRepository, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     def test__get_user(self):

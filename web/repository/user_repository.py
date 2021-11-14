@@ -1,7 +1,5 @@
 from typing import Optional
 
-from flask_login import current_user
-
 from web.model import User
 from web.repository.current_user_repository import CurrentUserRepository
 
