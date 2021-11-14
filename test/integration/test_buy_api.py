@@ -95,12 +95,7 @@ class TestBuyApi(BaseApiTestCase):
         self.assertEqual(response.status_code, 400)
 
     def __test_variable_buy(
-        self,
-        deposit: int,
-        available_amount: int,
-        product_cost: int,
-        requested_amount: int,
-        expected_change: List[int]
+        self, deposit: int, available_amount: int, product_cost: int, requested_amount: int, expected_change: List[int]
     ):
         mock_user = UserFixtures.add_mock_buyer_user(deposit=deposit)
         mock_product = ProductFixtures.add_mock_product(
