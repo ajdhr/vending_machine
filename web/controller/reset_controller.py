@@ -18,4 +18,4 @@ class ResetController(Resource):
     def post(self):
         TransactionService.reset()
 
-        return Response(status=201)
+        return Response(status=200)
