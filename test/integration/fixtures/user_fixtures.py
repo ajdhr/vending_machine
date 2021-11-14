@@ -5,8 +5,8 @@ from web.model import User
 
 class UserFixtures:
     @staticmethod
-    def add_mock_buyer_user() -> User:
-        user = MockUserData.get_mock_buyer_user()
+    def add_mock_buyer_user(deposit: int = 0) -> User:
+        user = MockUserData.get_mock_buyer_user(deposit=deposit)
         db.session.add(user)
         db.session.commit()
 

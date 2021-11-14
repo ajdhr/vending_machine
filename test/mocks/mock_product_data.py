@@ -8,7 +8,7 @@ class MockProductData:
         return {"name": "testProduct", "cost": 1, "amount_available": 3}
 
     @staticmethod
-    def get_mock_product() -> Product:
+    def get_mock_product(amount: int = 20, cost: int = 10) -> Product:
         seller_id = MockUserData.get_mock_seller_user().id
-        return Product(id=1, name="MockProduct", cost=10, amount_available=20, seller_id=seller_id)
+        return Product(id=1, name="MockProduct", cost=cost, amount_available=amount, seller_id=seller_id)
 

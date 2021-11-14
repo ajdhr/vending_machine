@@ -13,7 +13,7 @@ class TestResetApi(BaseApiTestCase):
     @target_mock.patch(target_module=UserRepository, target=CurrentUserRepository, new=MockCurrentUserBuyerRepository)
     @target_mock.patch(target_module=UserService, target=CurrentUserRepository, new=MockCurrentUserBuyerRepository)
     def test__reset_deposit(self):
-        mock_user = UserFixtures.add_mock_buyer_user()
+        mock_user = UserFixtures.add_mock_buyer_user(deposit=10)
 
         self.http_client.post("/api/reset/", headers=self._HEADERS)
 

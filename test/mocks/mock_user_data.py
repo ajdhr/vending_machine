@@ -27,5 +27,5 @@ class MockUserData:
         return User(id=1, username="testSeller", role="seller", deposit=0)
 
     @staticmethod
-    def get_mock_buyer_user() -> User:
-        return User(id=2, username="testBuyer", role="buyer", deposit=10)
+    def get_mock_buyer_user(deposit: int = 0) -> User:
+        return User(id=2, username="testBuyer", role="buyer", deposit=deposit)
