@@ -27,7 +27,7 @@ class ProductService:
     @classmethod
     def get_all(cls) -> List[ProductResponseDTO]:
         products: List[Product] = ProductRepository.get_all()
-        return [cls.__populate_product_response_dto(product) for product in products]
+        return [cls.__populate_product_response_dto(product=product) for product in products]
 
     @classmethod
     def update(cls, product_id: int, data: ProductDTO) -> ProductResponseDTO:

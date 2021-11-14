@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_login import LoginManager, current_user
+from flask_login import LoginManager
 from flask_principal import Principal, UserNeed, RoleNeed, identity_loaded
 
 from db_factory import db
