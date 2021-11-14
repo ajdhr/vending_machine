@@ -1,6 +1,6 @@
-from test.api.base_api_test_case import BaseApiTestCase
-from test.api.mocks.mock_transaction_service import MockTransactionService
-from test.api.mocks.mock_user_repository import MockSellerUserRepository, MockBuyerUserRepository
+from test.base_api_test_case import BaseApiTestCase
+from test.mocks.mock_transaction_service import MockTransactionService
+from test.mocks.mock_user_repository import MockBuyerUserRepository, MockSellerUserRepository
 from test.utils import target_mock
 from web.controller.reset_controller import ResetController
 from web.repository.user_repository import UserRepository

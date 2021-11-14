@@ -7,6 +7,10 @@ class MockUserData:
         return {"username": "testUser", "password": "test123", "role": "buyer"}
 
     @staticmethod
+    def get_valid_update_user_request_data():
+        return {"username": "testUserUpdated", "password": "test123Updated", "role": "buyer"}
+
+    @staticmethod
     def get_create_user_request_data_with_missing_username():
         return {"password": "pass", "role": "buyer"}
 
@@ -20,8 +24,8 @@ class MockUserData:
 
     @staticmethod
     def get_mock_seller_user() -> User:
-        return User(id=0, username="testBuyer", role="seller", deposit="0")
+        return User(id=1, username="testSeller", role="seller", deposit="0")
 
     @staticmethod
     def get_mock_buyer_user() -> User:
-        return User(id=1, username="testBuyer", role="buyer", deposit="0")
+        return User(id=2, username="testBuyer", role="buyer", deposit="0")

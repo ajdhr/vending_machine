@@ -1,4 +1,4 @@
-from test.api.mocks.mock_user_data import MockUserData
+from test.mocks.mock_user_data import MockUserData
 from web.model import User
 
 

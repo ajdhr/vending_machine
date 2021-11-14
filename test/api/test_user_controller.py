@@ -1,8 +1,9 @@
 import json
-from test.api.base_api_test_case import BaseApiTestCase
-from test.api.mocks.mock_user_data import MockUserData
-from test.api.mocks.mock_user_repository import MockSellerUserRepository
-from test.api.mocks.mock_user_service import MockUserService
+from test.base_api_test_case import BaseApiTestCase
+from test.mocks.mock_user_data import MockUserData
+from test.mocks.mock_user_repository import MockSellerUserRepository
+from test.mocks.mock_user_service import MockUserService
+
 from test.utils import target_mock
 from web.controller.user_controller import UserController
 from web.repository.user_repository import UserRepository

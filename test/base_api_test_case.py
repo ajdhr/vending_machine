@@ -1,5 +1,4 @@
 from flask import current_app
-from flask_login import login_user
 from flask_principal import identity_changed, Identity
 from flask_testing import TestCase
 
@@ -7,7 +6,6 @@ from config.test_config import TestConfig
 from db_factory import db
 from flask_factory import create_app
 from role import Role
-from web.model import User
 
 
 class BaseApiTestCase(TestCase):
@@ -27,6 +25,9 @@ class BaseApiTestCase(TestCase):
             "Content-type": "application/json",
             "Accept": "application/json",
         }
+        db.session.remove()
+        db.drop_all()
+        db.create_all()
 
         super().setUp(*args, **kwargs)
 
@@ -34,8 +35,3 @@ class BaseApiTestCase(TestCase):
         super().tearDown(*args, **kwargs)
         db.session.remove()
         db.drop_all()
-
-    @staticmethod
-    def _login_mock_user(user: User):
-        login_user(user, remember=True)
-        identity_changed.send(current_app._get_current_object(), identity=Identity(user.id))

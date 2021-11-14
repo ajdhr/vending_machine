@@ -40,6 +40,7 @@ class UserController(Resource):
     @api.response(400, "Invalid request data")
     @api.response(401, "Unauthorized access")
     def put(self):
+        print("USER UPDATE")
         user_data: UserDTO = UserSchema().load(request.json)
         UserService.update(data=user_data)
 

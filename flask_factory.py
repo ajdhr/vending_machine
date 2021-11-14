@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_principal import Principal, UserNeed, RoleNeed, identity_loaded
 
 from db_factory import db
@@ -31,11 +31,14 @@ def setup_login_manager(app):
 
 
 def on_identity_loaded(sender, identity):
-    current_user = UserService.get()
-    identity.user = current_user
+    user = UserService.get()
+    if not user:
+        return
 
-    if hasattr(current_user, "id"):
-        identity.provides.add(UserNeed(current_user.id))
+    identity.user = user
 
-    if hasattr(current_user, "role"):
-        identity.provides.add(RoleNeed(str(current_user.role.value)))
+    if hasattr(user, "id"):
+        identity.provides.add(UserNeed(user.id))
+
+    if hasattr(user, "role"):
+        identity.provides.add(RoleNeed(str(user.role.value)))

@@ -1,10 +1,9 @@
 from typing import List
 
-from flask_login import current_user
-
 from db_factory import db
 from web.dto.product_dto import ProductDTO, ProductResponseDTO
 from web.model import Product
+from web.repository.current_user_repository import CurrentUserRepository
 from web.repository.product_repository import ProductRepository
 from web.utils.exceptions import ProductNotOwnedByUser
 
@@ -12,7 +11,7 @@ from web.utils.exceptions import ProductNotOwnedByUser
 class ProductService:
     @classmethod
     def create(cls, data: ProductDTO) -> ProductResponseDTO:
-        product = Product(seller_id=current_user.id)
+        product = Product(seller_id=CurrentUserRepository.get_current_user_id())
         cls.__populate_product_model(product=product, data=data)
 
         db.session.add(product)
@@ -52,7 +51,7 @@ class ProductService:
 
     @classmethod
     def __validate_ownership(cls, product: Product):
-        if not product.seller_id == current_user.id:
+        if not product.seller_id == CurrentUserRepository.get_current_user_id():
             raise ProductNotOwnedByUser(product_id=product.id)
 
     @classmethod
