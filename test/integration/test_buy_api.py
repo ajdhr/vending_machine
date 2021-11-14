@@ -7,6 +7,7 @@ from test.integration.fixtures.product_fixtures import ProductFixtures
 from test.integration.fixtures.user_fixtures import UserFixtures
 from test.mocks.mock_buy_data import MockBuyData
 from test.mocks.mock_current_user_repository import MockCurrentUserBuyerRepository
+from test.mocks.mock_user_data import MockUserData
 from test.utils import target_mock
 from web.model import User, Product
 from web.repository.current_user_repository import CurrentUserRepository
@@ -15,6 +16,8 @@ from web.service.user_service import UserService
 
 
 class TestBuyApi(BaseApiTestCase):
+    _SELLER_ID = MockUserData.get_mock_seller_user().id
+
     @target_mock.patch(target_module=UserRepository, target=CurrentUserRepository, new=MockCurrentUserBuyerRepository)
     @target_mock.patch(target_module=UserService, target=CurrentUserRepository, new=MockCurrentUserBuyerRepository)
     def test__buy_valid_data(self):
@@ -73,7 +76,7 @@ class TestBuyApi(BaseApiTestCase):
     @target_mock.patch(target_module=UserService, target=CurrentUserRepository, new=MockCurrentUserBuyerRepository)
     def test__buy_invalid_data_insufficient_funds(self):
         UserFixtures.add_mock_buyer_user(deposit=5)
-        mock_product = ProductFixtures.add_mock_product(amount=10, cost=10)
+        mock_product = ProductFixtures.add_mock_product(seller_id=self._SELLER_ID, amount=10, cost=10)
         buy_data = MockBuyData.get_buy_request_data(product_id=mock_product.id, amount=3)
 
         response = self.http_client.post("/api/buy/", headers=self._HEADERS, data=json.dumps(buy_data))
@@ -84,7 +87,7 @@ class TestBuyApi(BaseApiTestCase):
     @target_mock.patch(target_module=UserService, target=CurrentUserRepository, new=MockCurrentUserBuyerRepository)
     def test__buy_invalid_data_insufficient_product_amount(self):
         UserFixtures.add_mock_buyer_user(deposit=500)
-        mock_product = ProductFixtures.add_mock_product(amount=10, cost=10)
+        mock_product = ProductFixtures.add_mock_product(seller_id=self._SELLER_ID, amount=10, cost=10)
         buy_data = MockBuyData.get_buy_request_data(product_id=mock_product.id, amount=13)
 
         response = self.http_client.post("/api/buy/", headers=self._HEADERS, data=json.dumps(buy_data))
@@ -100,7 +103,11 @@ class TestBuyApi(BaseApiTestCase):
         expected_change: List[int]
     ):
         mock_user = UserFixtures.add_mock_buyer_user(deposit=deposit)
-        mock_product = ProductFixtures.add_mock_product(amount=available_amount, cost=product_cost)
+        mock_product = ProductFixtures.add_mock_product(
+            seller_id=self._SELLER_ID,
+            amount=available_amount,
+            cost=product_cost,
+        )
 
         initial_product_amount = mock_product.amount_available
 

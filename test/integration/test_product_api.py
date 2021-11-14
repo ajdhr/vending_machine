@@ -16,6 +16,8 @@ from web.service.user_service import UserService
 
 
 class TestProductApi(BaseApiTestCase):
+    _SELLER_ID = MockUserData.get_mock_seller_user().id
+
     @target_mock.patch(target_module=UserRepository, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     @target_mock.patch(target_module=UserService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     @target_mock.patch(target_module=ProductService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
@@ -37,7 +39,7 @@ class TestProductApi(BaseApiTestCase):
     @target_mock.patch(target_module=ProductService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     def test__get_products(self):
         UserFixtures.add_mock_seller_user()
-        mock_product = ProductFixtures.add_mock_product()
+        mock_product = ProductFixtures.add_mock_product(seller_id=self._SELLER_ID)
 
         response = self.http_client.get("/api/product/", headers=self._HEADERS)
         deserialized_response = json.loads(response.data)
@@ -52,7 +54,7 @@ class TestProductApi(BaseApiTestCase):
     @target_mock.patch(target_module=ProductService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     def test__get_product(self):
         UserFixtures.add_mock_seller_user()
-        mock_product = ProductFixtures.add_mock_product()
+        mock_product = ProductFixtures.add_mock_product(seller_id=self._SELLER_ID)
 
         response = self.http_client.get(f"/api/product/{mock_product.id}/", headers=self._HEADERS)
         deserialized_response = json.loads(response.data)
@@ -66,7 +68,7 @@ class TestProductApi(BaseApiTestCase):
     @target_mock.patch(target_module=ProductService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     def test__get_non_existent_product(self):
         UserFixtures.add_mock_seller_user()
-        ProductFixtures.add_mock_product()
+        ProductFixtures.add_mock_product(seller_id=self._SELLER_ID)
 
         response = self.http_client.get(f"/api/product/{123}/", headers=self._HEADERS)
         self.assertEqual(response.status_code, 404)
@@ -76,7 +78,7 @@ class TestProductApi(BaseApiTestCase):
     @target_mock.patch(target_module=ProductService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     def test__update_product(self):
         UserFixtures.add_mock_seller_user()
-        mock_product = ProductFixtures.add_mock_product()
+        mock_product = ProductFixtures.add_mock_product(seller_id=self._SELLER_ID)
         product_data = MockProductData.get_valid_product_request_data()
 
         self.http_client.put(f"/api/product/{mock_product.id}/", headers=self._HEADERS, data=json.dumps(product_data))
@@ -91,9 +93,25 @@ class TestProductApi(BaseApiTestCase):
     @target_mock.patch(target_module=UserRepository, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     @target_mock.patch(target_module=UserService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     @target_mock.patch(target_module=ProductService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
+    def test__update_product_with_wrong_user(self):
+        UserFixtures.add_mock_seller_user()
+        mock_product = ProductFixtures.add_mock_product(seller_id=100)
+        product_data = MockProductData.get_valid_product_request_data()
+
+        response = self.http_client.put(
+            f"/api/product/{mock_product.id}/",
+            headers=self._HEADERS,
+            data=json.dumps(product_data),
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+    @target_mock.patch(target_module=UserRepository, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
+    @target_mock.patch(target_module=UserService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
+    @target_mock.patch(target_module=ProductService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     def test__update_non_existent_product(self):
         UserFixtures.add_mock_seller_user()
-        ProductFixtures.add_mock_product()
+        ProductFixtures.add_mock_product(seller_id=self._SELLER_ID)
         product_data = MockProductData.get_valid_product_request_data()
 
         response = self.http_client.put(f"/api/product/{222}/", headers=self._HEADERS, data=json.dumps(product_data))
@@ -104,7 +122,7 @@ class TestProductApi(BaseApiTestCase):
     @target_mock.patch(target_module=ProductService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     def test__delete_product(self):
         UserFixtures.add_mock_seller_user()
-        mock_product = ProductFixtures.add_mock_product()
+        mock_product = ProductFixtures.add_mock_product(seller_id=self._SELLER_ID)
 
         self.http_client.delete(f"/api/product/{mock_product.id}/", headers=self._HEADERS)
 
@@ -116,8 +134,19 @@ class TestProductApi(BaseApiTestCase):
     @target_mock.patch(target_module=ProductService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
     def test__delete_non_existent_product(self):
         UserFixtures.add_mock_seller_user()
-        ProductFixtures.add_mock_product()
+        ProductFixtures.add_mock_product(seller_id=self._SELLER_ID)
 
         response = self.http_client.delete(f"/api/product/{222}/", headers=self._HEADERS)
 
         self.assertEqual(response.status_code, 404)
+
+    @target_mock.patch(target_module=UserRepository, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
+    @target_mock.patch(target_module=UserService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
+    @target_mock.patch(target_module=ProductService, target=CurrentUserRepository, new=MockCurrentUserSellerRepository)
+    def test__delete_product_with_wrong_user(self):
+        UserFixtures.add_mock_seller_user()
+        mock_product = ProductFixtures.add_mock_product(seller_id=100)
+
+        response = self.http_client.delete(f"/api/product/{mock_product.id}/", headers=self._HEADERS)
+
+        self.assertEqual(response.status_code, 403)
