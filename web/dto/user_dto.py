@@ -12,6 +12,7 @@ class UserDTO:
 
 @dataclass
 class UserResponseDTO:
+    id: int
     username: str
     role: Role
     deposit: int

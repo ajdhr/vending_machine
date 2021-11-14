@@ -29,6 +29,10 @@ class UserService:
         return cls.__populate_user_dto(user=user)
 
     @classmethod
+    def get_by_id(cls, id: int) -> User:
+        return UserRepository.get_by_id(id=id)
+
+    @classmethod
     def update(cls, data: UserDTO):
         user = UserRepository.get_current_user()
         cls.__populate_user_model(user=user, data=data)
@@ -43,7 +47,7 @@ class UserService:
 
     @classmethod
     def __populate_user_dto(cls, user: User) -> UserResponseDTO:
-        return UserResponseDTO(username=user.username, role=Role(user.role), deposit=user.deposit)
+        return UserResponseDTO(id=user.id, username=user.username, role=Role(user.role), deposit=user.deposit)
 
     @classmethod
     def __populate_user_model(cls, user: User, data: UserDTO):

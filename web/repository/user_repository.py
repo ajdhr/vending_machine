@@ -7,3 +7,7 @@ class UserRepository:
     @staticmethod
     def get_current_user() -> User:
         return User.query.filter(User.id == current_user.id).first()
+
+    @staticmethod
+    def get_by_id(id: int) -> User:
+        return User.query.filter(User.id == id).first()

@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_login import LoginManager
+from flask_principal import Principal, UserNeed, RoleNeed, identity_loaded
 
 from db_factory import db
 from web import blueprint
+from web.service.user_service import UserService
 
 
 def create_app(config):
@@ -13,6 +15,9 @@ def create_app(config):
     setup_login_manager(app=app)
     app.register_blueprint(blueprint=blueprint)
 
+    principals = Principal(app)
+    identity_loaded.connect(on_identity_loaded)
+
     return app
 
 
@@ -20,8 +25,17 @@ def setup_login_manager(app):
     login_manager = LoginManager()
     login_manager.init_app(app)
 
-    from web.model.user import User
-
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
+        return UserService.get_by_id(id=user_id)
+
+
+def on_identity_loaded(sender, identity):
+    current_user = UserService.get()
+    identity.user = current_user
+
+    if hasattr(current_user, "id"):
+        identity.provides.add(UserNeed(current_user.id))
+
+    if hasattr(current_user, "role"):
+        identity.provides.add(RoleNeed(str(current_user.role.value)))

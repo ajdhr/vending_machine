@@ -18,6 +18,7 @@ class UserSchema(Schema):
 
 
 class UserResponseSchema(Schema):
+    id = fields.Integer(required=True, allow_none=False)
     username = fields.String(required=True, allow_none=False)
     role = EnumField(Role, required=True, allow_none=False)
     deposit = fields.Integer(required=True, allow_none=False)
